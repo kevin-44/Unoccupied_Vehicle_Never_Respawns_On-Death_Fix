@@ -25,10 +25,6 @@
 
 // *** GLOBAL VARIABLES
 
-// **** VEHICLES
-
-static bool:vhOccupiedBefore[MAX_VEHICLES];
-
 // **** TIMERS
 
 static ptmRespawnUnoccupiedVehicle[MAX_VEHICLES];
@@ -39,12 +35,10 @@ static ptmRespawnUnoccupiedVehicle[MAX_VEHICLES];
 
 stock Hook_SetVehicleHealth(vehicleid, Float:health)
 {
-	if(!vhOccupiedBefore[vehicleid] && health < 250.0)
+	if(health < 250.0)
 	{
-		vhOccupiedBefore[vehicleid] = false;
-
 		KillTimer(ptmRespawnUnoccupiedVehicle[vehicleid]);
-		ptmRespawnUnoccupiedVehicle[vehicleid] = SetTimerEx("RespawnUnoccupiedVehicle", 10000, false, "i", vehicleid);
+		ptmRespawnUnoccupiedVehicle[vehicleid] = SetTimerEx("RespawnUnoccupiedVehicle", 13000, false, "i", vehicleid);
 	}
 	return SetVehicleHealth(vehicleid, health);
 }
@@ -59,35 +53,9 @@ stock Hook_SetVehicleHealth(vehicleid, Float:health)
 
 // ** CALLBACKS
 
-public OnPlayerStateChange(playerid, newstate, oldstate)
-{
-	if(newstate == PLAYER_STATE_DRIVER)
-	{
-		vhOccupiedBefore[GetPlayerVehicleID(playerid)] = true;
-	}
-
-	#if defined uvnrodf_OnPlayerStateChange
-		return uvnrodf_OnPlayerStateChange(playerid, newstate, oldstate);
-	#else
-		return 1;
-	#endif
-}
-
-#if defined _ALS_OnPlayerStateChange
-	#undef OnPlayerStateChange
-#else
-	#define _ALS_OnPlayerStateChange
-#endif
-
-#define OnPlayerStateChange uvnrodf_OnPlayerStateChange
-
-#if defined uvnrodf_OnPlayerStateChange
-	forward uvnrodf_OnPlayerStateChange(playerid, newstate, oldstate);
-#endif
-
 public OnVehicleSpawn(vehicleid)
 {
-	vhOccupiedBefore[vehicleid] = false;
+	KillTimer(ptmRespawnUnoccupiedVehicle[vehicleid]);
 
 	#if defined uvnrodf_OnVehicleSpawn
 		return uvnrodf_OnVehicleSpawn(vehicleid);
@@ -106,29 +74,6 @@ public OnVehicleSpawn(vehicleid)
 
 #if defined uvnrodf_OnVehicleSpawn
 	forward uvnrodf_OnVehicleSpawn(vehicleid);
-#endif
-
-public OnVehicleDeath(vehicleid, killerid)
-{
-	vhOccupiedBefore[vehicleid] = false;
-
-	#if defined uvnrodf_OnVehicleDeath
-		return uvnrodf_OnVehicleDeath(vehicleid, killerid);
-	#else
-		return 1;
-	#endif
-}
-
-#if defined _ALS_OnVehicleDeath
-	#undef OnVehicleDeath
-#else
-	#define _ALS_OnVehicleDeath
-#endif
-
-#define OnVehicleDeath uvnrodf_OnVehicleDeath
-
-#if defined uvnrodf_OnVehicleDeath
-	forward uvnrodf_OnVehicleDeath(vehicleid, killerid);
 #endif
 
 // ** FUNCTIONS

@@ -33,7 +33,7 @@ main()
 
 public OnGameModeInit()
 {
-	AddStaticVehicleEx(560, 132.1675, -91.1419, 1.1661, 268.9395, -1, -1, 10); // Sultan
+	AddStaticVehicleEx(560, 132.1675, -91.1419, 1.1661, 268.9395, -1, -1, 80); // Sultan
 	return 1;
 }
 
