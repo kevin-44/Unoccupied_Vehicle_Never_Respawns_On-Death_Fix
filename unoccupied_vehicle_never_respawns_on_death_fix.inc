@@ -35,11 +35,9 @@ static ptmRespawnUnoccupiedVehicle[MAX_VEHICLES];
 
 stock Hook_SetVehicleHealth(vehicleid, Float:health)
 {
+	KillTimer(ptmRespawnUnoccupiedVehicle[vehicleid]);
 	if(health < 250.0)
-	{
-		KillTimer(ptmRespawnUnoccupiedVehicle[vehicleid]);
 		ptmRespawnUnoccupiedVehicle[vehicleid] = SetTimerEx("RespawnUnoccupiedVehicle", 13000, false, "i", vehicleid);
-	}
 	return SetVehicleHealth(vehicleid, health);
 }
 
